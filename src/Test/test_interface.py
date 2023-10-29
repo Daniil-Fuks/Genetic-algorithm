@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
-from test_settings import DialogWindow
+from test_settings import SettingsWindow
 
 from test_main import generate_animals
 
@@ -19,6 +19,10 @@ class Example(QWidget):
             string += i + f' [{i.count("1")}], '
         string += self.parants_lst[-1] + f' [{i.count("1")}]'
         self.parent.setText(string)
+
+    def settings(self):
+        self.settings_window = SettingsWindow()
+        self.settings_window.show()
 
     def initUI(self):
         self.setGeometry(100, 100, 1100, 700)
@@ -60,13 +64,11 @@ class Example(QWidget):
 
         self.text_setting_btn = QPushButton('Настройки', self)
         self.text_setting_btn.move(50, 25)
+        self.text_setting_btn.clicked.connect(self.settings)
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    #    ex = Example()
-    DialogWindow_test = DialogWindow()
-
-    DialogWindow_test.show()
-
+    ex = Example()
+    ex.show()
     sys.exit(app.exec())

@@ -2,7 +2,7 @@ from PyQt5.QtGui import QPainter, QColor, QFont
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QLineEdit, QPushButton, QCheckBox
 
 
-class DialogWindow(QWidget):
+class SettingsWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -42,7 +42,7 @@ class DialogWindow(QWidget):
 
         # Кнопка сохранения
         self.button_save = QPushButton('Сохранить', self)
-        self.button_save.move(100, 110)
+        self.button_save.move(90, 110)
 
         self.button_save.clicked.connect(self.save_settings)
 
