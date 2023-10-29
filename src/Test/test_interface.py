@@ -25,6 +25,8 @@ class Example(QWidget):
     def settings(self):
         self.settings_window = SettingsWindow()
         self.settings_window.show()
+        # Создаем переменную self.settings_closed, которая обозначает, что окно настроек закрыто
+        self.settings_closed = True
 
     def initUI(self):
         self.setGeometry(100, 100, 1100, 700)
@@ -68,6 +70,10 @@ class Example(QWidget):
         self.text_setting_btn.move(50, 25)
         self.text_setting_btn.clicked.connect(self.settings)
 
+        f = open('settings.txt', mode='r', encoding='UTF-8').read().splitlines()
+        print(f)
+        # После принта self.settings_closed выдает ошибку
+        print(self.settings_closed)
 
 
 if __name__ == '__main__':
