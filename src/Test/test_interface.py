@@ -1,9 +1,11 @@
 import sys
-
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
 from test_settings import SettingsWindow
-
 from test_main import generate_animals
+
+
+def except_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
 
 class Example(QWidget):
@@ -67,7 +69,9 @@ class Example(QWidget):
         self.text_setting_btn.clicked.connect(self.settings)
 
 
+
 if __name__ == '__main__':
+    sys.excepthook = except_hook
     app = QApplication(sys.argv)
     ex = Example()
     ex.show()

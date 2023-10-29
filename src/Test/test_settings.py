@@ -1,3 +1,6 @@
+import sys
+
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPainter, QColor, QFont
 from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QLineEdit, QPushButton, QCheckBox
 
@@ -43,8 +46,9 @@ class SettingsWindow(QWidget):
         # Кнопка сохранения
         self.button_save = QPushButton('Сохранить', self)
         self.button_save.move(90, 110)
-
         self.button_save.clicked.connect(self.save_settings)
+
+        # Уведомление о сохранении
 
     def paintEvent(self, event):
         # Создаем объект QPainter для рисования
@@ -69,3 +73,15 @@ class SettingsWindow(QWidget):
             self.checkbox_vision_res = False
         self.input_len_res = self.input_len.text()
         self.input_cnt_res = self.input_cnt.text()
+        f = open('settings.txt', mode='w', encoding='UTF-8')
+        settings = f'{self.input_len_res}|{self.input_cnt_res}|{self.checkbox_vision_res}'
+        f.write(settings)
+        f.close()
+        self.close()
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    ex = SettingsWindow()
+    ex.show()
+    sys.exit(app.exec())
