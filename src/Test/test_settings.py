@@ -1,14 +1,25 @@
 import sys
 
-from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QPainter, QColor, QFont
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QLineEdit, QPushButton, QCheckBox
+from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QLineEdit, QPushButton, QCheckBox, QSpinBox
 
 
 class SettingsWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.UiComponents()
+
+    def UiComponents(self):
+        # окно ввода количества особей
+        self.set_cnt_spin = QSpinBox(self)
+        self.set_cnt_spin.setGeometry(100, 100, 50, 25)
+        self.set_cnt_spin.move(210, 45)
+
+        # окно ввода длины особей
+        self.set_len_spin = QSpinBox(self)
+        self.set_len_spin.move(195, 10)
+        self.set_len_spin.resize(50, 25)
 
     def initUI(self):
         self.setGeometry(300, 100, 260, 150)
@@ -20,19 +31,11 @@ class SettingsWindow(QWidget):
         self.text_setting_cnt.move(10, 45)
         self.text_setting_cnt.setFont(QFont('Verdana', 10))
 
-        self.input_cnt = QLineEdit(self)
-        self.input_cnt.move(210, 45)
-        self.input_cnt.resize(30, 20)
-
         # Настройка длины одного животного
         self.text_len_animal = QLabel(self)
         self.text_len_animal.setText('Длина одного животного:')
         self.text_len_animal.move(10, 10)
         self.text_len_animal.setFont(QFont('Verdana', 10))
-
-        self.input_len = QLineEdit(self)
-        self.input_len.resize(30, 20)
-        self.input_len.move(195, 10)
 
         # Настройка визуализации
         self.checkbox_vision_text = QLabel(self)
@@ -71,8 +74,8 @@ class SettingsWindow(QWidget):
             self.checkbox_vision_res = True
         elif self.checkbox_vision.checkState() == 0:
             self.checkbox_vision_res = False
-        self.input_len_res = self.input_len.text()
-        self.input_cnt_res = self.input_cnt.text()
+        self.input_len_res = self.set_len_spin.value()
+        self.input_cnt_res = self.set_cnt_spin.value()
         f = open('settings.txt', mode='w', encoding='UTF-8')
         settings = f'{self.input_len_res}|{self.input_cnt_res}|{self.checkbox_vision_res}'
         f.write(settings)
