@@ -70,10 +70,6 @@ class Example(QWidget):
         self.text_setting_btn.move(50, 25)
         self.text_setting_btn.clicked.connect(self.settings)
 
-        f = open('settings.txt', mode='r', encoding='UTF-8').read().splitlines()
-        print(f)
-        # После принта self.settings_closed выдает ошибку
-        print(self.settings_closed)
 
 
 if __name__ == '__main__':
