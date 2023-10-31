@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5.QtGui import QPainter, QColor, QFont
-from PyQt5.QtWidgets import QWidget, QLabel, QApplication, QLineEdit, QPushButton, QCheckBox, QSpinBox
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QCheckBox, QSpinBox, QApplication
 
 
 class SettingsWindow(QWidget):
@@ -82,9 +82,13 @@ class SettingsWindow(QWidget):
         f.close()
         self.close()
 
+def execpt_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
-if __name__ == '__main__':
-    app = QApplication(sys.argv)
-    ex = SettingsWindow()
-    ex.show()
-    sys.exit(app.exec())
+
+# if __name__ == '__main__':
+#     sys.excepthook = execpt_hook
+#     app = QApplication(sys.argv)
+#     ex = SettingsWindow()
+#     ex.show()
+#     sys.exit(app.exec())
