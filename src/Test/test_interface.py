@@ -1,14 +1,28 @@
+import random
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QPushButton
+
+from PyQt5.QtWidgets import QPushButton, QMainWindow, QLabel, QDialog
+
 from test_settings import SettingsWindow
-from test_main import generate_animals
 
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-class Example(QWidget):
+def generate_animals(num):  # Создание одной особи
+    animal = ''
+    list_parrants = []
+    for i in range(num):
+        for i in range(5):
+            num = random.randint(0, 1)
+            animal += str(num)
+        list_parrants.append(animal)
+        animal = ''
+    return list_parrants
+
+
+class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -24,7 +38,26 @@ class Example(QWidget):
 
     def settings(self):
         self.settings_window = SettingsWindow()
-        self.settings_window.show()
+        self.settings_window.exec()
+        f = open('settings.txt', mode='r', encoding='UTF-8').read().splitlines()
+        f[0] = f[0].split(';')
+        self.set_len = f[0][0]
+        self.set_cnt = f[0][1]
+        if f[0][2] == 'True':
+            self.set_check_vis = True
+        else:
+            self.set_check_vis = False
+
+        print(self.set_len, self.set_cnt, self.set_check_vis)
+
+
+
+
+
+        # dlg = QDialog(self)
+        # dlg.setWindowTitle("HELLO!")
+        # dlg.exec()
+
 
     def initUI(self):
         self.setGeometry(100, 100, 1100, 700)
@@ -68,10 +101,8 @@ class Example(QWidget):
         self.text_setting_btn.move(50, 25)
         self.text_setting_btn.clicked.connect(self.settings)
 
-
-if __name__ == '__main__':
-    sys.excepthook = except_hook
-    app = QApplication(sys.argv)
-    ex = Example()
-    ex.show()
-    sys.exit(app.exec())
+        self.label = QLabel(self)
+        self.label.setText('Длина одной особи:')
+        self.label.resize(150, 30)
+        self.label.move(20, 100)
+        self.label.show()

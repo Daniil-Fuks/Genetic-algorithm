@@ -1,10 +1,10 @@
 import sys
 
 from PyQt5.QtGui import QPainter, QColor, QFont
-from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QCheckBox, QSpinBox, QApplication
+from PyQt5.QtWidgets import QLabel, QPushButton, QCheckBox, QSpinBox, QDialog, QApplication
 
 
-class SettingsWindow(QWidget):
+class SettingsWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.initUI()
@@ -77,18 +77,19 @@ class SettingsWindow(QWidget):
         self.input_len_res = self.set_len_spin.value()
         self.input_cnt_res = self.set_cnt_spin.value()
         f = open('settings.txt', mode='w', encoding='UTF-8')
-        settings = f'{self.input_len_res}|{self.input_cnt_res}|{self.checkbox_vision_res}'
+        settings = f'{self.input_len_res};{self.input_cnt_res};{self.checkbox_vision_res}'
         f.write(settings)
         f.close()
         self.close()
+
 
 def execpt_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-# if __name__ == '__main__':
-#     sys.excepthook = execpt_hook
-#     app = QApplication(sys.argv)
-#     ex = SettingsWindow()
-#     ex.show()
-#     sys.exit(app.exec())
+if __name__ == '__main__':
+    sys.excepthook = execpt_hook
+    app = QApplication(sys.argv)
+    ex = SettingsWindow()
+    ex.show()
+    sys.exit(app.exec())
