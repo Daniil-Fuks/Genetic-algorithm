@@ -260,7 +260,7 @@
      <string>Количество циклов:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="set_cnt_2">
+   <widget class="QLabel" name="set_loop_cnt">
     <property name="geometry">
      <rect>
       <x>170</x>

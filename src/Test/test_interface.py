@@ -26,7 +26,7 @@ def generate_animals(num):  # Создание одной особи
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('test-disign.ui', self)
+        uic.loadUi('test-main-disign.ui', self)
         self.initUI()
 
     def parents_set_text(self):
@@ -45,6 +45,7 @@ class Interface(QMainWindow):
         f[0] = f[0].split(';')
         self.len = f[0][0]
         self.cnt = f[0][1]
+        self.loops = f[0][3]
         if f[0][2] == 'True':
             self.check_vis = '✅'
         else:
@@ -53,6 +54,7 @@ class Interface(QMainWindow):
         self.set_len.setText(str(self.len))
         self.set_cnt.setText(str(self.cnt))
         self.set_check_vis.setText(self.check_vis)
+        self.set_loop_cnt.setText(self.loops)
 
     def initUI(self):
         ...
