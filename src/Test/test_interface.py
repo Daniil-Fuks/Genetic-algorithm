@@ -11,15 +11,19 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-def generate_animals(num):  # Создание одной особи
+def generate_animals(cnt, len):  # Создание одной особи
     animal = ''
     list_parrants = []
-    for i in range(num):
-        for i in range(5):
+    numbers = []
+    for i in range(cnt):
+        for i in range(len):
             num = random.randint(0, 1)
             animal += str(num)
+        animal = f'{animal}    [{animal.count("1")}]'
+        #numbers.append(animal.count("1"))
         list_parrants.append(animal)
         animal = ''
+    #print(len(numbers))
     return list_parrants
 
 
@@ -28,15 +32,24 @@ class Interface(QMainWindow):
         super().__init__()
         uic.loadUi('test-main-disign.ui', self)
         self.initUI()
+        self.cnt = 0
+        self.len = 0
+        self.loops = 0
+        self.check_vis = False
+        self.listWidget.hide()
 
-    def parents_set_text(self):
-        num = int(self.select_herd_size.text())
-        self.parants_lst = generate_animals(num)
-        string = ''
-        for i in self.parants_lst[:-1]:
-            string += i + f' [{i.count("1")}], '
-        string += self.parants_lst[-1] + f' [{i.count("1")}]'
-        self.parent.setText(string)
+    # С помощью этой функции создается целое стадо
+    def create_parents(self):
+        self.parants_lst = generate_animals(int(self.cnt), int(self.len))
+        return self.parants_lst
+
+    def start(self):
+        self.start_btn.hide()
+        self.listWidget.show()
+        lst1 = self.create_parents()
+        for i in range(len(lst1) - 1):
+            self.listWidget.addItem(lst1[i])
+        #self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
 
     def settings(self):
         self.settings_window = SettingsWindow()
@@ -57,17 +70,7 @@ class Interface(QMainWindow):
         self.set_loop_cnt.setText(self.loops)
 
     def initUI(self):
-        ...
-
-        # Создание кнопки "создать стадо" и ее настройка
-
-        # self.create_parants.clicked.connect(self.parents_set_text)
-
-        # Вывод созданного стада
-        # self.parent = QLabel(self)
-        # self.parent.move(450, 0)
-        # self.parent.setFont(QFont('Times New Roman', 10))
-        # self.parent.resize(1000, 100)
+        self.start_btn.clicked.connect(self.start)
 
         ##############################################################################
         self.text_setting_btn.clicked.connect(self.settings)
