@@ -11,19 +11,20 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-def generate_animals(cnt, len):  # Создание одной особи
+def generate_animals(cnt, len_ind):  # Создание одной особи
     animal = ''
     list_parrants = []
-    numbers = []
+    force_num = []
     for i in range(cnt):
-        for i in range(len):
+        for i in range(len_ind):
             num = random.randint(0, 1)
             animal += str(num)
         animal = f'{animal}    [{animal.count("1")}]'
-        #numbers.append(animal.count("1"))
+        force_num.append(animal.count("1"))
         list_parrants.append(animal)
         animal = ''
-    #print(len(numbers))
+    middle = sum(force_num) / len(force_num)
+    list_parrants.append(round(middle, 4))
     return list_parrants
 
 
@@ -49,7 +50,7 @@ class Interface(QMainWindow):
         lst1 = self.create_parents()
         for i in range(len(lst1) - 1):
             self.listWidget.addItem(lst1[i])
-        #self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
+        self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
 
     def settings(self):
         self.settings_window = SettingsWindow()
