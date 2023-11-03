@@ -24,7 +24,7 @@ def generate_animals(cnt, len_ind):  # Создание одной особи
         list_parrants.append(animal)
         animal = ''
     middle = sum(force_num) / len(force_num)
-    list_parrants.append(round(middle, 4))
+    list_parrants.append(f'Среднее значение: {round(middle, 4)}')
     return list_parrants
 
 
@@ -37,6 +37,7 @@ class Interface(QMainWindow):
         self.len = 0
         self.loops = 0
         self.check_vis = False
+        self.middle_stat = []
         self.listWidget.hide()
 
     # С помощью этой функции создается целое стадо
@@ -44,13 +45,29 @@ class Interface(QMainWindow):
         self.parants_lst = generate_animals(int(self.cnt), int(self.len))
         return self.parants_lst
 
-    def start(self):
-        self.start_btn.hide()
+    def start(self, loops):
+        """
+        1. После нажатия кнопки должно создаваться только одно родительское стадо.
+        2. Далее это выбирается 6 пар из этого стада, производится битва (после битвы остаются 6 сильнейших особей)
+        3. Особи размножаются, ДНК делится в рандомном месте, так появляется новое стадо.
+        4. Новое стадо мутирует и встает на место родительского стада.
+        """
+        self.parants = self.create_parents()
         self.listWidget.show()
-        lst1 = self.create_parents()
-        for i in range(len(lst1) - 1):
-            self.listWidget.addItem(lst1[i])
-        self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
+        for i in self.parants:
+            self.listWidget.addItem(i)
+    #     for i in range(int(self.loops) - 1):
+    #         self.start_btn.hide()
+    #         self.listWidget.show()
+    #     if self.check_vis == '✅':
+    #         plt.plot(self.middle_stat)
+    #         plt.show()
+    #     else:
+    #         lst1 = self.create_parents()
+    #         for i in range(len(lst1) - 1):
+    #             self.listWidget.addItem(lst1[i])
+    #         self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
+    #         self.middle_stat.append(lst1[-1])
 
     def settings(self):
         self.settings_window = SettingsWindow()
