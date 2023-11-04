@@ -11,7 +11,7 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
-def generate_animals(cnt, len_ind):  # Создание одной особи
+def generate_animals(cnt, len_ind):  # Создание первого стада
     animal = ''
     list_parrants = []
     force_num = []
@@ -28,6 +28,25 @@ def generate_animals(cnt, len_ind):  # Создание одной особи
     return list_parrants
 
 
+def get_middle(lst):
+    middle = []
+    for i in lst:
+        middle.append(int(i[1][1]))
+    return sum(middle) / len(middle)
+
+
+def fight(animals, cnt):  # Создание битвы
+    num = random.randint(0, cnt)
+    num2 = random.randint(0, cnt)
+    if num == num2:
+        return animals[num]
+    else:
+        if int(animals[num][1][1]) > int(animals[num2][1][1]):
+            return animals[num]
+        else:
+            return animals[num2]
+
+
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -38,7 +57,11 @@ class Interface(QMainWindow):
         self.loops = 0
         self.check_vis = False
         self.middle_stat = []
-        self.listWidget.hide()
+        self.winners = []
+        self.parants_list.hide()
+        self.new_animals_lst.hide()
+        self.label_2.hide()
+        self.label_3.hide()
 
     # С помощью этой функции создается целое стадо
     def create_parents(self):
@@ -53,9 +76,33 @@ class Interface(QMainWindow):
         4. Новое стадо мутирует и встает на место родительского стада.
         """
         self.parants = self.create_parents()
-        self.listWidget.show()
+
+        self.parants_list.show()
+        self.new_animals_lst.show()
+        self.label_2.show()
+        self.label_3.show()
+        self.start_btn.hide()
+
+        # Отображение первого стада
         for i in self.parants:
-            self.listWidget.addItem(i)
+            self.parants_list.addItem(i)
+
+        # Добавляем среднее значение в общую статистику
+        middle = float(self.parants[-1].split()[2])
+        self.middle_stat.append(middle)
+
+        # Обработка списка для удобного использования функции fight().
+        for i in range(len(self.parants)):
+            self.parants[i] = self.parants[i].split()
+
+        # Получаем и отображаем новое стадо после произвеения битвы
+        for _ in range(len(self.parants) - 1):
+            self.winners.append(fight(self.parants, len(self.parants) - 2))
+        for i in range(len(self.winners)):
+            winner = self.winners[i]
+            self.new_animals_lst.addItem(f'{winner[0]} {winner[1]}')
+        self.new_animals_lst.addItem(f'Среднее значение: {round(get_middle(self.winners), 4)}')
+
     #     for i in range(int(self.loops) - 1):
     #         self.start_btn.hide()
     #         self.listWidget.show()
