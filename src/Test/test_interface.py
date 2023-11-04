@@ -47,6 +47,17 @@ def fight(animals, cnt):  # Создание битвы
             return animals[num2]
 
 
+# Функция, которая генерирует одного ребенка
+def new_child(winners, num):
+    child_1 = winners[random.randint(0, num)]
+    child_2 = winners[random.randint(0, num)]
+    while child_1 == child_2:
+        child_2 = winners[random.randint(0, num)]
+    split = random.randint(0, num - 1)
+    child = child_1[0][:split] + child_2[0][split:]
+    return child
+
+
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -58,6 +69,7 @@ class Interface(QMainWindow):
         self.check_vis = False
         self.middle_stat = []
         self.winners = []
+        self.children = []
         self.parants_list.hide()
         self.new_animals_lst.hide()
         self.label_2.hide()
@@ -95,13 +107,28 @@ class Interface(QMainWindow):
         for i in range(len(self.parants)):
             self.parants[i] = self.parants[i].split()
 
-        # Получаем и отображаем новое стадо после произвеения битвы
+        # Получаем новое стадо после произвеения битвы
         for _ in range(len(self.parants) - 1):
             self.winners.append(fight(self.parants, len(self.parants) - 2))
+        middle = get_middle(self.winners)
+        self.middle_stat.append(middle)
+
+        # Создаем потомство и отображаем его
         for i in range(len(self.winners)):
-            winner = self.winners[i]
-            self.new_animals_lst.addItem(f'{winner[0]} {winner[1]}')
-        self.new_animals_lst.addItem(f'Среднее значение: {round(get_middle(self.winners), 4)}')
+            child = new_child(self.winners, len(self.winners) - 1)
+            buffer = [child, f'[{child.count("1")}]']
+            self.children.append(buffer)
+
+        for item in self.children:
+            string = f'{item[0]} {item[1]}'
+            self.new_animals_lst.addItem(string)
+        middle = get_middle(self.children)
+        self.new_animals_lst.addItem(f'Среднее значение: {middle}')
+
+        # middle = get_middle(self.children)
+        # print(middle)
+        # self.middle_stat.append(middle)
+        # self.new_animals_lst.addItem(f'Среднее значение: {middle}')
 
     #     for i in range(int(self.loops) - 1):
     #         self.start_btn.hide()

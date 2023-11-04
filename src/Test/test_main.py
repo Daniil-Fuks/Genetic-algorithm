@@ -13,19 +13,6 @@ if __name__ == '__main__':
     ex.show()
     sys.exit(app.exec())
 
-#
-# def fight():  # Создание битвы
-#     num = random.randint(0, 4)
-#     num2 = random.randint(0, 4)
-#     if num == num2:
-#         return animals[num]
-#     else:
-#         if animals[num][1] > animals[num2][1]:
-#             return animals[num]
-#         else:
-#             return animals[num2]
-
-
 # def new_child():
 #     child_1 = winner[random.randint(0, 4)]
 #     child_2 = winner[random.randint(0, 4)]
