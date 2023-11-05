@@ -58,6 +58,29 @@ def new_child(winners, num):
     return child
 
 
+# Функция, производящая мутациюa
+def mutation(lst, prob):
+    herd = []
+    buffer = []
+    for i in range(len(lst)):
+        ind = ''
+        for z in range(len(lst[i][0])):
+            flag = random.randint(1, 100)
+            obj = lst[i][0][z]
+            if flag <= prob:
+                if obj == '1':
+                    ind += '0'
+                elif obj == '0':
+                    ind += '1'
+            else:
+                ind += obj
+        herd.append(ind)
+        ind = ''
+    for i in range(len(herd)):
+        buffer.append([herd[i], f'[{herd[i].count("1")}]'])
+    return buffer
+
+
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -113,16 +136,20 @@ class Interface(QMainWindow):
         middle = get_middle(self.winners)
         self.middle_stat.append(middle)
 
-        # Создаем потомство и отображаем его
+        # Создаем потомство
         for i in range(len(self.winners)):
             child = new_child(self.winners, len(self.winners) - 1)
             buffer = [child, f'[{child.count("1")}]']
             self.children.append(buffer)
 
-        for item in self.children:
-            string = f'{item[0]} {item[1]}'
-            self.new_animals_lst.addItem(string)
         middle = get_middle(self.children)
+        self.middle_stat.append(middle)
+
+        self.parants = mutation(self.children, 10)
+        for i in range(len(self.parants)):
+            self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
+        middle = get_middle(self.parants)
+        self.middle_stat.append(middle)
         self.new_animals_lst.addItem(f'Среднее значение: {middle}')
 
         # middle = get_middle(self.children)
