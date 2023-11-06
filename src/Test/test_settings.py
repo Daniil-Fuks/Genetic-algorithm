@@ -12,7 +12,7 @@ class SettingsWindow(QDialog):
         self.button_save.clicked.connect(self.save_settings)
 
     def initUI(self):
-       ...
+        ...
 
     def save_settings(self):
         if self.checkbox_vision.checkState() == 2:
@@ -22,8 +22,10 @@ class SettingsWindow(QDialog):
         self.input_len_res = self.set_len_spin.value()
         self.input_cnt_res = self.set_cnt_spin.value()
         self.input_loop_cnt_res = self.cnt_loop.value()
+        self.input_mutation_chanse = self.mutation.value()
         f = open('settings.txt', mode='w', encoding='UTF-8')
-        settings = f'{self.input_len_res};{self.input_cnt_res};{self.checkbox_vision_res};{self.input_loop_cnt_res}'
+        settings = f'{self.input_len_res};{self.input_cnt_res};{self.checkbox_vision_res};{self.input_loop_cnt_res};' \
+                   f'{self.input_mutation_chanse}'
         f.write(settings)
         f.close()
         self.reject()

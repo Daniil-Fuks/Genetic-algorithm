@@ -31,8 +31,8 @@ def generate_animals(cnt, len_ind):  # Создание первого стад�
 def get_middle(lst):
     middle = []
     for i in lst:
-        middle.append(int(i[1][1]))
-    return sum(middle) / len(middle)
+        middle.append(int(i[1][1:-1]))
+    return round(sum(middle) / len(middle), 4)
 
 
 def fight(animals, cnt):  # Создание битвы
@@ -136,18 +136,16 @@ class Interface(QMainWindow):
             child = new_child(self.winners, len(self.winners) - 1)
             buffer = [child, f'[{child.count("1")}]']
             self.children.append(buffer)
-
         middle = get_middle(self.children)
         self.middle_stat.append(middle)
 
         # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
-        self.parants = mutation(self.children, 0.5)
+        self.parants = mutation(self.children, self.mutation_chanse)
         for i in range(len(self.parants)):
             self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
         middle = get_middle(self.parants)
         self.middle_stat.append(middle)
         self.new_animals_lst.addItem(f'Среднее значение: {middle}')
-
 
     #     for i in range(int(self.loops) - 1):
     #         self.start_btn.hide()
@@ -170,6 +168,9 @@ class Interface(QMainWindow):
         self.len = f[0][0]
         self.cnt = f[0][1]
         self.loops = f[0][3]
+        self.mutation_chanse = int(f[0][4]) / 100
+        self.mutation_chanse_output = f[0][4]
+
         if f[0][2] == 'True':
             self.check_vis = '✅'
         else:
@@ -179,6 +180,7 @@ class Interface(QMainWindow):
         self.set_cnt.setText(str(self.cnt))
         self.set_check_vis.setText(self.check_vis)
         self.set_loop_cnt.setText(self.loops)
+        self.set_mutation.setText(self.mutation_chanse_output + '%')
 
     def initUI(self):
         self.start_btn.clicked.connect(self.start)
