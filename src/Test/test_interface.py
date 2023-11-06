@@ -11,6 +11,7 @@ def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
 
+# format: [['0001010111', '[5]'], ['1011000111', '[6]'], ..., ]
 def generate_animals(cnt, len_ind):  # Создание первого стада
     animal = ''
     list_parrants = []
@@ -19,12 +20,8 @@ def generate_animals(cnt, len_ind):  # Создание первого стад�
         for i in range(len_ind):
             num = random.randint(0, 1)
             animal += str(num)
-        animal = f'{animal}    [{animal.count("1")}]'
-        force_num.append(animal.count("1"))
-        list_parrants.append(animal)
+        list_parrants.append([animal, f'[{animal.count("1")}]'])
         animal = ''
-    middle = sum(force_num) / len(force_num)
-    list_parrants.append(f'Среднее значение: {round(middle, 4)}')
     return list_parrants
 
 
@@ -115,18 +112,15 @@ class Interface(QMainWindow):
 
         # Отображение первого стада
         for i in self.parants:
-            self.parants_list.addItem(i)
+            self.parants_list.addItem(f'{i[0]} {i[1]}')
 
         # Добавляем среднее значение в общую статистику
-        middle = float(self.parants[-1].split()[2])
+        middle = get_middle(self.parants)
+        self.parants_list.addItem(f'Среднее значение: {middle}')
         self.middle_stat.append(middle)
 
-        # Обработка списка для удобного использования функции fight().
-        for i in range(len(self.parants)):
-            self.parants[i] = self.parants[i].split()
-
         # Получаем новое стадо после произвеения битвы
-        for _ in range(len(self.parants) - 1):
+        for _ in range(len(self.parants)):
             self.winners.append(fight(self.parants, len(self.parants) - 2))
         middle = get_middle(self.winners)
         self.middle_stat.append(middle)
