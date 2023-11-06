@@ -89,6 +89,7 @@ class Interface(QMainWindow):
         self.cnt = 0
         self.len = 0
         self.loops = 0
+        self.mutation = 0
         self.check_vis = False
         self.middle_stat = []
         self.winners = []
@@ -104,12 +105,6 @@ class Interface(QMainWindow):
         return self.parants_lst
 
     def start(self, loops):
-        """
-        1. После нажатия кнопки должно создаваться только одно родительское стадо.
-        2. Далее это выбирается 6 пар из этого стада, производится битва (после битвы остаются 6 сильнейших особей)
-        3. Особи размножаются, ДНК делится в рандомном месте, так появляется новое стадо.
-        4. Новое стадо мутирует и встает на место родительского стада.
-        """
         self.parants = self.create_parents()
 
         self.parants_list.show()
@@ -145,17 +140,14 @@ class Interface(QMainWindow):
         middle = get_middle(self.children)
         self.middle_stat.append(middle)
 
-        self.parants = mutation(self.children, 10)
+        # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
+        self.parants = mutation(self.children, 0.5)
         for i in range(len(self.parants)):
             self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
         middle = get_middle(self.parants)
         self.middle_stat.append(middle)
         self.new_animals_lst.addItem(f'Среднее значение: {middle}')
 
-        # middle = get_middle(self.children)
-        # print(middle)
-        # self.middle_stat.append(middle)
-        # self.new_animals_lst.addItem(f'Среднее значение: {middle}')
 
     #     for i in range(int(self.loops) - 1):
     #         self.start_btn.hide()
