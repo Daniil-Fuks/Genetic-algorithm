@@ -118,23 +118,29 @@ class Interface(QMainWindow):
         middle = get_middle(self.parants)
         self.parants_list.addItem(f'Среднее значение: {middle}')
         self.middle_stat.append(middle)
+        for _ in range(int(self.loops)):
+            self.children = []
+            self.winners = []
 
-        # Получаем новое стадо после произвеения битвы
-        for _ in range(len(self.parants)):
-            self.winners.append(fight(self.parants, len(self.parants) - 2))
-        middle = get_middle(self.winners)
-        self.middle_stat.append(middle)
+            # Получаем новое стадо после произвеения битвы
+            for _ in range(len(self.parants)):
+                self.winners.append(fight(self.parants, len(self.parants) - 2))
+            middle = get_middle(self.winners)
+            self.middle_stat.append(middle)
 
-        # Создаем потомство
-        for i in range(len(self.winners)):
-            child = new_child(self.winners, len(self.winners) - 1)
-            buffer = [child, f'[{child.count("1")}]']
-            self.children.append(buffer)
-        middle = get_middle(self.children)
-        self.middle_stat.append(middle)
+            # Создаем потомство
+            for i in range(len(self.winners)):
+                child = new_child(self.winners, len(self.winners) - 1)
+                buffer = [child, f'[{child.count("1")}]']
+                self.children.append(buffer)
+            middle = get_middle(self.children)
+            self.middle_stat.append(middle)
 
-        # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
-        self.parants = mutation(self.children, self.mutation_chanse)
+            # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
+            self.parants = mutation(self.children, self.mutation_chanse)
+
+
+        # Вывод последней вариации стада
         for i in range(len(self.parants)):
             self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
         middle = get_middle(self.parants)
