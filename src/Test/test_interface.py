@@ -109,18 +109,15 @@ class Interface(QMainWindow):
         self.herd.generate_animals()
         show_herd(self.parants_list, self.herd)
         self.middle_value.append(self.herd.get_middle_value())
-        print(self.middle_value)
 
+        self.herd.fight()
 
+        """
+        2. Битва
+        3. Размножение
+        4. Мутация
+        """
 
-        # # Добавляем среднее значение в общую статистику
-        # middle = get_middle(self.parants)
-        # self.parants_list.addItem(f'Среднее значение: {middle}')
-        # self.middle_stat.append(middle)
-        # for _ in range(int(self.loops)):
-        #     self.children = []
-        #     self.winners = []
-        #
         #     # Получаем новое стадо после произвеения битвы
         #     for _ in range(len(self.parants)):
         #         self.winners.append(fight(self.parants, len(self.parants) - 2))

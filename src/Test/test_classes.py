@@ -33,3 +33,9 @@ class Herd:
             res = self.cur.execute('SELECT * FROM herd').fetchall()
             middle.append(res[i][2])
         return sum(middle) / len(middle)
+
+    def fight(self):
+        num1 = random.randint(1, self.quantity)
+        num2 = random.randint(1, self.quantity)
+        if num1 == num2:
+            self.cur.execute('')
