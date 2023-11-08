@@ -2,28 +2,14 @@ import random
 import sys
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QApplication
 
 from test_settings import SettingsWindow
+from test_classes import Herd
 
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
-
-
-# format: [['0001010111', '[5]'], ['1011000111', '[6]'], ..., ]
-def generate_animals(cnt, len_ind):  # Создание первого стада
-    animal = ''
-    list_parrants = []
-    force_num = []
-    for i in range(cnt):
-        for i in range(len_ind):
-            num = random.randint(0, 1)
-            animal += str(num)
-        list_parrants.append([animal, f'[{animal.count("1")}]'])
-        animal = ''
-    return list_parrants
-
 
 def get_middle(lst):
     middle = []
@@ -83,8 +69,7 @@ class Interface(QMainWindow):
         super().__init__()
         uic.loadUi('test-main-disign.ui', self)
         self.initUI()
-        self.cnt = 0
-        self.len = 0
+        self.herd = Herd()
         self.loops = 0
         self.mutation = 0
         self.check_vis = False
@@ -97,12 +82,9 @@ class Interface(QMainWindow):
         self.label_3.hide()
 
     # С помощью этой функции создается целое стадо
-    def create_parents(self):
-        self.parants_lst = generate_animals(int(self.cnt), int(self.len))
-        return self.parants_lst
+
 
     def start(self, loops):
-        self.parants = self.create_parents()
 
         self.parants_list.show()
         self.new_animals_lst.show()
@@ -110,9 +92,10 @@ class Interface(QMainWindow):
         self.label_3.show()
         self.start_btn.hide()
 
-        # Отображение первого стада
-        for i in self.parants:
-            self.parants_list.addItem(f'{i[0]} {i[1]}')
+        self.herd.generate_animals()
+        for ind in self.herd.individuals:
+            self.
+        print(self.herd.individuals)
 
         # Добавляем среднее значение в общую статистику
         middle = get_middle(self.parants)
@@ -138,7 +121,6 @@ class Interface(QMainWindow):
 
             # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
             self.parants = mutation(self.children, self.mutation_chanse)
-
 
         # Вывод последней вариации стада
         for i in range(len(self.parants)):
@@ -187,3 +169,14 @@ class Interface(QMainWindow):
 
         ##############################################################################
         self.text_setting_btn.clicked.connect(self.settings)
+
+
+def execpt_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
+
+if __name__ == '__main__':
+    sys.excepthook = execpt_hook
+    app = QApplication(sys.argv)
+    ex = Interface()
+    ex.show()
+    sys.exit(app.exec())

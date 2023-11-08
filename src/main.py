@@ -1,30 +1,17 @@
-import random
+import sys
+from PyQt5.QtWidgets import QApplication
 
+from interface import Interface
 
-def generate_animals(num):  # Создание одной особи
-    animal = ''
-    list_parrants = []
-    for i in range(num):
-        for i in range(5):
-            num = random.randint(0, 1)
-            animal += str(num)
-        list_parrants.append(animal)
-        animal = ''
-    return list_parrants
+def execpt_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
 
-
-#
-# def fight():  # Создание битвы
-#     num = random.randint(0, 4)
-#     num2 = random.randint(0, 4)
-#     if num == num2:
-#         return animals[num]
-#     else:
-#         if animals[num][1] > animals[num2][1]:
-#             return animals[num]
-#         else:
-#             return animals[num2]
-
+if __name__ == '__main__':
+    sys.excepthook = execpt_hook
+    app = QApplication(sys.argv)
+    ex = Interface()
+    ex.show()
+    sys.exit(app.exec())
 
 # def new_child():
 #     child_1 = winner[random.randint(0, 4)]
