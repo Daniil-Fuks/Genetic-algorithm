@@ -38,4 +38,4 @@ class Herd:
         num1 = random.randint(1, self.quantity)
         num2 = random.randint(1, self.quantity)
         if num1 == num2:
-            self.cur.execute('')
+            ...
