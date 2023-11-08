@@ -1,10 +1,11 @@
 import random
 import sqlite3
 
+
 class Herd:
     def __init__(self):
         self.len_ind = 10
-        self.quantity = 1231123
+        self.quantity = 5
         self.individuals = []
         self.con = sqlite3.connect('test-db.sqlite3')
         self.cur = self.con.cursor()
@@ -26,7 +27,9 @@ class Herd:
             animal = ''
         self.con.commit()
 
-
-
-ex = Herd()
-ex.generate_animals()
+    def get_middle_value(self):
+        middle = []
+        for i in range(self.quantity):
+            res = self.cur.execute('SELECT * FROM herd').fetchall()
+            middle.append(res[i][2])
+        return sum(middle) / len(middle)

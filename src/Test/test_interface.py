@@ -1,4 +1,5 @@
 import random
+import sqlite3
 import sys
 
 from PyQt5 import uic
@@ -63,6 +64,21 @@ def mutation(lst, prob):
         buffer.append([herd[i], f'[{herd[i].count("1")}]'])
     return buffer
 
+def show_herd(item, herd):
+    con = sqlite3.connect('test-db.sqlite3')
+    cur = con.cursor()
+    res = cur.execute(f'SELECT * FROM herd').fetchall()
+    for i in range(len(res)):
+        item.addItem(f'{res[i][1]} [{res[i][2]}]')
+    item.addItem(f'Среднее значение: {str(herd.get_middle_value())}')
+
+def clean_db():
+    con = sqlite3.connect('test-db.sqlite3')
+    cur = con.cursor()
+    cur.execute(f'DELETE FROM herd; ').fetchall()
+    cur.execute(f'DELETE FROM sqlite_sequence WHERE name="herd"').fetchall()
+    con.commit()
+
 
 class Interface(QMainWindow):
     def __init__(self):
@@ -73,9 +89,7 @@ class Interface(QMainWindow):
         self.loops = 0
         self.mutation = 0
         self.check_vis = False
-        self.middle_stat = []
-        self.winners = []
-        self.children = []
+        self.middle_value = []
         self.parants_list.hide()
         self.new_animals_lst.hide()
         self.label_2.hide()
@@ -85,49 +99,51 @@ class Interface(QMainWindow):
 
 
     def start(self, loops):
-
         self.parants_list.show()
         self.new_animals_lst.show()
         self.label_2.show()
         self.label_3.show()
         self.start_btn.hide()
 
+        clean_db()
         self.herd.generate_animals()
-        for ind in self.herd.individuals:
-            self.
-        print(self.herd.individuals)
+        show_herd(self.parants_list, self.herd)
+        self.middle_value.append(self.herd.get_middle_value())
+        print(self.middle_value)
 
-        # Добавляем среднее значение в общую статистику
-        middle = get_middle(self.parants)
-        self.parants_list.addItem(f'Среднее значение: {middle}')
-        self.middle_stat.append(middle)
-        for _ in range(int(self.loops)):
-            self.children = []
-            self.winners = []
 
-            # Получаем новое стадо после произвеения битвы
-            for _ in range(len(self.parants)):
-                self.winners.append(fight(self.parants, len(self.parants) - 2))
-            middle = get_middle(self.winners)
-            self.middle_stat.append(middle)
 
-            # Создаем потомство
-            for i in range(len(self.winners)):
-                child = new_child(self.winners, len(self.winners) - 1)
-                buffer = [child, f'[{child.count("1")}]']
-                self.children.append(buffer)
-            middle = get_middle(self.children)
-            self.middle_stat.append(middle)
-
-            # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
-            self.parants = mutation(self.children, self.mutation_chanse)
-
-        # Вывод последней вариации стада
-        for i in range(len(self.parants)):
-            self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
-        middle = get_middle(self.parants)
-        self.middle_stat.append(middle)
-        self.new_animals_lst.addItem(f'Среднее значение: {middle}')
+        # # Добавляем среднее значение в общую статистику
+        # middle = get_middle(self.parants)
+        # self.parants_list.addItem(f'Среднее значение: {middle}')
+        # self.middle_stat.append(middle)
+        # for _ in range(int(self.loops)):
+        #     self.children = []
+        #     self.winners = []
+        #
+        #     # Получаем новое стадо после произвеения битвы
+        #     for _ in range(len(self.parants)):
+        #         self.winners.append(fight(self.parants, len(self.parants) - 2))
+        #     middle = get_middle(self.winners)
+        #     self.middle_stat.append(middle)
+        #
+        #     # Создаем потомство
+        #     for i in range(len(self.winners)):
+        #         child = new_child(self.winners, len(self.winners) - 1)
+        #         buffer = [child, f'[{child.count("1")}]']
+        #         self.children.append(buffer)
+        #     middle = get_middle(self.children)
+        #     self.middle_stat.append(middle)
+        #
+        #     # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
+        #     self.parants = mutation(self.children, self.mutation_chanse)
+        #
+        # # Вывод последней вариации стада
+        # for i in range(len(self.parants)):
+        #     self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
+        # middle = get_middle(self.parants)
+        # self.middle_stat.append(middle)
+        # self.new_animals_lst.addItem(f'Среднее значение: {middle}')
 
     #     for i in range(int(self.loops) - 1):
     #         self.start_btn.hide()
