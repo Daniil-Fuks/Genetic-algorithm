@@ -17,9 +17,9 @@
    <widget class="Line" name="line">
     <property name="geometry">
      <rect>
-      <x>-10</x>
-      <y>260</y>
-      <width>221</width>
+      <x>-20</x>
+      <y>190</y>
+      <width>231</width>
       <height>21</height>
      </rect>
     </property>
@@ -42,7 +42,7 @@
       <x>200</x>
       <y>-20</y>
       <width>20</width>
-      <height>291</height>
+      <height>221</height>
      </rect>
     </property>
     <property name="frameShadow">
@@ -58,9 +58,9 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>60</x>
       <y>0</y>
-      <width>111</width>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -338,19 +338,6 @@
      <number>1</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="text_setting_btn">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>210</y>
-      <width>101</width>
-      <height>28</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Изменить</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="start_btn">
     <property name="geometry">
      <rect>
@@ -484,11 +471,23 @@
      <x>0</x>
      <y>0</y>
      <width>772</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menusettings">
+    <property name="title">
+     <string>Настройки</string>
+    </property>
+    <addaction name="action"/>
+   </widget>
+   <addaction name="menusettings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="action">
+   <property name="text">
+    <string>Изменить</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

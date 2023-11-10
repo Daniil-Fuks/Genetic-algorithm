@@ -2,6 +2,8 @@ import random
 import sqlite3
 import sys
 from matplotlib import pyplot as plt
+from PyQt5.QtWinExtras import QtWin
+from PyQt5 import QtGui
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -80,8 +82,10 @@ class Interface(QMainWindow):
         self.new_animals_lst.hide()
         self.label_2.hide()
         self.label_3.hide()
+        self.myappid = 'icon.png'
+        QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
 
-    # С помощью этой функции создается целое стадо
+        # С помощью этой функции создается целое стадо
 
     def start(self):
         self.parants_list.show()
@@ -149,7 +153,7 @@ class Interface(QMainWindow):
 
     def initUI(self):
         self.start_btn.clicked.connect(self.start)
-        self.text_setting_btn.clicked.connect(self.settings)
+        self.action.triggered.connect(self.settings)
 
 
 def execpt_hook(cls, exception, traceback):
@@ -159,6 +163,7 @@ def execpt_hook(cls, exception, traceback):
 if __name__ == '__main__':
     sys.excepthook = execpt_hook
     app = QApplication(sys.argv)
+    app.setWindowIcon((QtGui.QIcon('icon.png.')))
     ex = Interface()
     ex.show()
     sys.exit(app.exec())
