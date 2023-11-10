@@ -1,10 +1,11 @@
+import os
 import random
 import sqlite3
 import sys
 from matplotlib import pyplot as plt
 from PyQt5.QtWinExtras import QtWin
 from PyQt5 import QtGui
-
+from PyQt5 import QtCore
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
@@ -68,6 +69,11 @@ def clean_db():
     con.commit()
 
 
+def restart():
+    QtCore.QCoreApplication.quit()
+    status = QtCore.QProcess.startDetached(sys.executable, sys.argv)
+
+
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -82,6 +88,7 @@ class Interface(QMainWindow):
         self.new_animals_lst.hide()
         self.label_2.hide()
         self.label_3.hide()
+        self.restart_btn.hide()
         self.myappid = 'icon.png'
         QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
 
@@ -92,6 +99,7 @@ class Interface(QMainWindow):
         self.new_animals_lst.show()
         self.label_2.show()
         self.label_3.show()
+        self.restart_btn.show()
         self.start_btn.hide()
 
         # Очистка БД после прошлых использований
@@ -154,6 +162,7 @@ class Interface(QMainWindow):
     def initUI(self):
         self.start_btn.clicked.connect(self.start)
         self.action.triggered.connect(self.settings)
+        self.restart_btn.clicked.connect(restart)
 
 
 def execpt_hook(cls, exception, traceback):
