@@ -1,6 +1,7 @@
 import random
 import sqlite3
 import sys
+from matplotlib import pyplot as plt
 
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
@@ -112,36 +113,15 @@ class Interface(QMainWindow):
             self.middle_value.append(self.herd.get_middle_value(3))
 
             # Произведение мутации, запись среднего значения в список
-            self.herd.mutation(10)
+            self.herd.mutation(self.mutation_chanse)
             self.herd.cleaning()
             if i + 1 == int(self.loops):
                 show_herd(self.new_animals_lst, self.herd, 1)
                 break
 
-
-        #
-        #     # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
-        #     self.parants = mutation(self.children, self.mutation_chanse)
-        #
-        # # Вывод последней вариации стада
-        # for i in range(len(self.parants)):
-        #     self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
-        # middle = get_middle(self.parants)
-        # self.middle_stat.append(middle)
-        # self.new_animals_lst.addItem(f'Среднее значение: {middle}')
-
-    #     for i in range(int(self.loops) - 1):
-    #         self.start_btn.hide()
-    #         self.listWidget.show()
-    #     if self.check_vis == '✅':
-    #         plt.plot(self.middle_stat)
-    #         plt.show()
-    #     else:
-    #         lst1 = self.create_parents()
-    #         for i in range(len(lst1) - 1):
-    #             self.listWidget.addItem(lst1[i])
-    #         self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
-    #         self.middle_stat.append(lst1[-1])
+        if self.check_vis == '✅':
+            plt.plot(self.middle_value)
+            plt.show()
 
     def settings(self):
         self.settings_window = SettingsWindow()
@@ -169,8 +149,6 @@ class Interface(QMainWindow):
 
     def initUI(self):
         self.start_btn.clicked.connect(self.start)
-
-        ##############################################################################
         self.text_setting_btn.clicked.connect(self.settings)
 
 
