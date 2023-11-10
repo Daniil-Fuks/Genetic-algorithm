@@ -7,6 +7,7 @@ class Herd:
         self.len_ind = 10
         self.quantity = 5
         self.individuals = []
+        self.id_counter = 0
         self.con = sqlite3.connect('test-db.sqlite3')
         self.cur = self.con.cursor()
 
@@ -25,6 +26,7 @@ class Herd:
             self.individuals.append([animal, animal.count('1')])
             self.cur.execute(f"INSERT INTO herd(body, force, number_herd) VALUES ('{animal}', {animal.count('1')},\
              1)").fetchall()
+            self.id_counter += 1
             animal = ''
         self.con.commit()
 
@@ -40,7 +42,6 @@ class Herd:
             return 'Не найдено.'
 
     def fight(self):
-        print('сработала')
         for _ in range(self.quantity):
             id1 = random.randint(1, self.quantity)
             id2 = random.randint(1, self.quantity)
@@ -61,6 +62,7 @@ class Herd:
             if force1 > force2:
                 self.cur.execute(
                     f"INSERT INTO herd(body, force, number_herd) VALUES('{body1}', {force1}, 2)")
+
 
             elif force2 > force1:
                 self.cur.execute(
@@ -84,6 +86,7 @@ class Herd:
             child = body1[:split] + body2[split:]
             force = child.count('1')
             self.cur.execute(f"INSERT INTO herd(body, force, number_herd) VALUES('{child}', {force}, 3)")
+
             self.con.commit()
 
     def mutation(self, prob):
@@ -100,4 +103,6 @@ class Herd:
                         ind += '1'
                 else:
                     ind += body[i]
-            print(ind, id_ind)
+            self.cur.execute(f"INSERT INTO herd(body, force, number_herd) VALUES('{ind}', {ind.count('1')}, 4)")
+
+        self.con.commit()

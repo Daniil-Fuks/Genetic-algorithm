@@ -5,8 +5,8 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
-from test_settings import SettingsWindow
 from test_classes import Herd
+from test_settings import SettingsWindow
 
 
 def except_hook(cls, exception, traceback):
@@ -101,14 +101,14 @@ class Interface(QMainWindow):
         self.herd.fight()
         self.middle_value.append(self.herd.get_middle_value(2))
 
+        # Рождение нового поколения
         self.herd.reproduction()
-        show_herd(self.new_animals_lst, self.herd, 3)
+        self.middle_value.append(self.herd.get_middle_value(3))
 
-        self.herd.mutation(100)
+        # Произведение мутации, запись среднего значения в список
+        self.herd.mutation(10)
+        show_herd(self.new_animals_lst, self.herd, 4)
 
-        """
-        4. Мутация
-        """
         #
         #     # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
         #     self.parants = mutation(self.children, self.mutation_chanse)
