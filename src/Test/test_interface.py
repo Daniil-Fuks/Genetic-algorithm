@@ -54,7 +54,7 @@ def show_herd(item, herd, num):
     res = cur.execute(f'SELECT * FROM herd WHERE number_herd = {num}').fetchall()
     for i in range(len(res)):
         item.addItem(f'{res[i][1]} [{res[i][2]}]')
-    item.addItem(f'Среднее значение: {str(round(herd.get_middle_value(num), 4))}')
+    item.addItem(f'Среднее значение: {str(round(float(herd.get_middle_value(num)), 4))}')
 
 
 def clean_db():
@@ -82,7 +82,7 @@ class Interface(QMainWindow):
 
     # С помощью этой функции создается целое стадо
 
-    def start(self, loops):
+    def start(self):
         self.parants_list.show()
         self.new_animals_lst.show()
         self.label_2.show()
@@ -95,19 +95,29 @@ class Interface(QMainWindow):
         # Генерация первого стада
         self.herd.generate_animals()
         show_herd(self.parants_list, self.herd, 1)
-        self.middle_value.append(self.herd.get_middle_value(1))
 
-        # Произведение битвы, средняя сила стада записывается в список
-        self.herd.fight()
-        self.middle_value.append(self.herd.get_middle_value(2))
+        for i in range(int(self.loops)):
+            if i > 0:
+                self.herd.set_first_iteration_flag()
 
-        # Рождение нового поколения
-        self.herd.reproduction()
-        self.middle_value.append(self.herd.get_middle_value(3))
+            self.middle_value.append(self.herd.get_middle_value(1))
 
-        # Произведение мутации, запись среднего значения в список
-        self.herd.mutation(10)
-        show_herd(self.new_animals_lst, self.herd, 4)
+            # Произведение битвы, средняя сила стада записывается в список
+            self.herd.last_id = self.herd.get_last_id()
+            self.herd.fight()
+            self.middle_value.append(self.herd.get_middle_value(2))
+
+            # Рождение нового поколения
+            self.herd.reproduction()
+            self.middle_value.append(self.herd.get_middle_value(3))
+
+            # Произведение мутации, запись среднего значения в список
+            self.herd.mutation(10)
+            self.herd.cleaning()
+            if i + 1 == int(self.loops):
+                show_herd(self.new_animals_lst, self.herd, 1)
+                break
+
 
         #
         #     # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
@@ -150,7 +160,9 @@ class Interface(QMainWindow):
             self.check_vis = '❌'
 
         self.set_len.setText(str(self.len))
+        self.herd.set_len_ind(self.len)
         self.set_cnt.setText(str(self.cnt))
+        self.herd.set_quantity(self.cnt)
         self.set_check_vis.setText(self.check_vis)
         self.set_loop_cnt.setText(self.loops)
         self.set_mutation.setText(self.mutation_chanse_output + '%')
