@@ -491,14 +491,36 @@
     <property name="title">
      <string>Настройки</string>
     </property>
-    <addaction name="action"/>
+    <addaction name="settings_action"/>
+   </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Инфо</string>
+    </property>
+    <addaction name="action_5"/>
    </widget>
    <addaction name="menusettings"/>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="action">
+  <action name="settings_action">
    <property name="text">
     <string>Изменить</string>
+   </property>
+  </action>
+  <action name="action_3">
+   <property name="text">
+    <string>Теория</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="text">
+    <string>Как реализован</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="text">
+    <string>О проекте</string>
    </property>
   </action>
  </widget>

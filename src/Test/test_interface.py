@@ -2,6 +2,8 @@ import os
 import random
 import sqlite3
 import sys
+import time
+
 from matplotlib import pyplot as plt
 from PyQt5.QtWinExtras import QtWin
 from PyQt5 import QtGui
@@ -83,6 +85,7 @@ class Interface(QMainWindow):
         self.herd = Herd()
         self.loops = 0
         self.mutation = 0
+        self.value = 500
         self.check_vis = False
         self.middle_value = []
         self.parants_list.hide()
@@ -94,6 +97,8 @@ class Interface(QMainWindow):
         QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
 
         # С помощью этой функции создается целое стадо
+    def update_progressBar(self, value):                           # <----
+        self.progressBar.setValue(value)
 
     def start(self):
         self.parants_list.show()
@@ -162,8 +167,11 @@ class Interface(QMainWindow):
 
     def initUI(self):
         self.start_btn.clicked.connect(self.start)
-        self.action.triggered.connect(self.settings)
+        self.settings_action.triggered.connect(self.settings)
         self.restart_btn.clicked.connect(restart)
+
+    def setupUi(self):
+        ...
 
 
 def execpt_hook(cls, exception, traceback):
