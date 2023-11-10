@@ -71,7 +71,8 @@ def clean_db():
 
 def restart():
     QtCore.QCoreApplication.quit()
-    status = QtCore.QProcess.startDetached(sys.executable, sys.argv)
+    QtCore.QProcess.startDetached(sys.executable, sys.argv)
+    open('settings.txt', 'w').close()
 
 
 class Interface(QMainWindow):
