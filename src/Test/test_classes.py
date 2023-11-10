@@ -7,7 +7,7 @@ class Herd:
         self.len_ind = 10
         self.quantity = 5
         self.individuals = []
-        self.con = sqlite3.connect('test-db.sqlite3')
+        self.con = sqlite3.connect('test-bd.db')
         self.cur = self.con.cursor()
 
     def set_quantity(self, num):
