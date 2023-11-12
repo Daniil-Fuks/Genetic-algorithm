@@ -1,8 +1,6 @@
-import os
 import random
 import sqlite3
 import sys
-import time
 
 from matplotlib import pyplot as plt
 from PyQt5.QtWinExtras import QtWin
