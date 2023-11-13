@@ -43,8 +43,8 @@ class Herd:
                 animal += str(num)
             self.individuals.append([animal, animal.count('1')])
             self.cur.execute(
-                f"INSERT INTO herd(body, force, number_herd, iteration_number) VALUES ('{animal}', {animal.count('1')}, \
-             1, 1)")
+                f"INSERT INTO herd(body, force, number_herd, iteration_number) VALUES ('{animal}',\
+            {animal.count('1')}, 1, 1)")
             animal = ''
             self.con.commit()
 

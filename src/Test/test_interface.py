@@ -1,3 +1,4 @@
+import io
 import random
 import sqlite3
 import sys
@@ -8,6 +9,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
+from template import template_main_window
 
 from test_classes import Herd
 from test_settings import SettingsWindow
@@ -78,7 +80,8 @@ def restart():
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('test-main-disign.ui', self)
+        f = io.StringIO(template_main_window)
+        uic.loadUi(f, self)
         self.initUI()
         self.herd = Herd()
         self.loops = 0
