@@ -1,53 +1,32 @@
+import io
 import random
+import sqlite3
 import sys
 
+from matplotlib import pyplot as plt
+from PyQt5.QtWinExtras import QtWin
+from PyQt5 import QtGui
+from PyQt5 import QtCore
 from PyQt5 import uic
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QApplication
+from src.template import template_main_window
 
+from classes import Herd
 from settings import SettingsWindow
 
 
 def except_hook(cls, exception, traceback):
     sys.__excepthook__(cls, exception, traceback)
 
-def generate_animals(cnt, len_ind):  # Создание первого стада
-    animal = ''
-    list_parrants = []
-    force_num = []
-    for i in range(cnt):
-        for i in range(len_ind):
-            num = random.randint(0, 1)
-            animal += str(num)
-        list_parrants.append([animal, f'[{animal.count("1")}]'])
-        animal = ''
-    return list_parrants
-
-
-def get_middle(lst):
-    middle = []
-    for i in lst:
-        middle.append(int(i[1][1:-1]))
-    return round(sum(middle) / len(middle), 4)
-
-
-def fight(animals, cnt):  # Создание битвы
-    num = random.randint(0, cnt)
-    num2 = random.randint(0, cnt)
-    if num == num2:
-        return animals[num]
-    else:
-        if int(animals[num][1][1]) > int(animals[num2][1][1]):
-            return animals[num]
-        else:
-            return animals[num2]
-
 
 # Функция, которая генерирует одного ребенка
 def new_child(winners, num):
     child_1 = winners[random.randint(0, num)]
     child_2 = winners[random.randint(0, num)]
+
     while child_1 == child_2:
         child_2 = winners[random.randint(0, num)]
+
     split = random.randint(0, num - 1)
     child = child_1[0][:split] + child_2[0][split:]
     return child
@@ -70,92 +49,98 @@ def mutation(lst, prob):
             else:
                 ind += obj
         herd.append(ind)
-        ind = ''
     for i in range(len(herd)):
         buffer.append([herd[i], f'[{herd[i].count("1")}]'])
     return buffer
 
 
+def show_herd(item, herd, num):
+    con = sqlite3.connect('test-db.sqlite3')
+    cur = con.cursor()
+    res = cur.execute(f'SELECT * FROM herd WHERE number_herd = {num}').fetchall()
+    for i in range(len(res)):
+        item.addItem(f'{res[i][1]} [{res[i][2]}]')
+    item.addItem(f'Среднее значение: {str(round(float(herd.get_middle_value(num)), 4))}')
+
+
+def clean_db():
+    con = sqlite3.connect('test-db.sqlite3')
+    cur = con.cursor()
+    cur.execute(f'DELETE FROM herd; ').fetchall()
+    cur.execute(f'DELETE FROM sqlite_sequence WHERE name="herd"').fetchall()
+    con.commit()
+
+
+def restart():
+    QtCore.QCoreApplication.quit()
+    QtCore.QProcess.startDetached(sys.executable, sys.argv)
+    open('settings.txt', 'w').close()
+
+
 class Interface(QMainWindow):
     def __init__(self):
         super().__init__()
-        uic.loadUi('main-disign.ui', self)
+        f = io.StringIO(template_main_window)
+        uic.loadUi(f, self)
         self.initUI()
-        self.cnt = 0
-        self.len = 0
+        self.herd = Herd()
         self.loops = 0
         self.mutation = 0
+        self.value = 500
         self.check_vis = False
-        self.middle_stat = []
-        self.winners = []
-        self.children = []
+        self.middle_value = []
         self.parants_list.hide()
         self.new_animals_lst.hide()
         self.label_2.hide()
         self.label_3.hide()
+        self.restart_btn.hide()
+        self.myappid = 'icon.png'
+        QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
 
-    # С помощью этой функции создается целое стадо
-    def create_parents(self):
-        self.parants_lst = generate_animals(int(self.cnt), int(self.len))
-        return self.parants_lst
+        # С помощью этой функции создается целое стадо
+    def update_progressBar(self, value):                           # <----
+        self.progressBar.setValue(value)
 
-    def start(self, loops):
-        self.parants = self.create_parents()
-
+    def start(self):
         self.parants_list.show()
         self.new_animals_lst.show()
         self.label_2.show()
         self.label_3.show()
+        self.restart_btn.show()
         self.start_btn.hide()
 
-        # Отображение первого стада
-        for i in self.parants:
-            self.parants_list.addItem(f'{i[0]} {i[1]}')
+        # Очистка БД после прошлых использований
+        clean_db()
 
-        # Добавляем среднее значение в общую статистику
-        middle = get_middle(self.parants)
-        self.parants_list.addItem(f'Среднее значение: {middle}')
-        self.middle_stat.append(middle)
-        for _ in range(int(self.loops)):
-            self.children = []
-            self.winners = []
+        # Генерация первого стада
+        self.herd.generate_animals()
+        show_herd(self.parants_list, self.herd, 1)
 
-            # Получаем новое стадо после произвеения битвы
-            for _ in range(len(self.parants)):
-                self.winners.append(fight(self.parants, len(self.parants) - 2))
-            middle = get_middle(self.winners)
-            self.middle_stat.append(middle)
+        for i in range(int(self.loops)):
+            if i > 0:
+                self.herd.set_first_iteration_flag()
 
-            # Создаем потомство
-            for i in range(len(self.winners)):
-                child = new_child(self.winners, len(self.winners) - 1)
-                buffer = [child, f'[{child.count("1")}]']
-                self.children.append(buffer)
-            middle = get_middle(self.children)
-            self.middle_stat.append(middle)
+            self.middle_value.append(self.herd.get_middle_value(1))
 
-            # Происходит мутация и новое стадо становится родительским. На этом моменте можно сделать цикл.
-            self.parants = mutation(self.children, self.mutation_chanse)
+            # Произведение битвы, средняя сила стада записывается в список
+            self.herd.last_id = self.herd.get_last_id()
+            self.herd.fight()
+            self.middle_value.append(self.herd.get_middle_value(2))
 
-        # Вывод последней вариации стада
-        for i in range(len(self.parants)):
-            self.new_animals_lst.addItem(f'{self.parants[i][0]} {self.parants[i][1]}')
-        middle = get_middle(self.parants)
-        self.middle_stat.append(middle)
-        self.new_animals_lst.addItem(f'Среднее значение: {middle}')
+            # Рождение нового поколения
+            self.herd.reproduction()
+            self.middle_value.append(self.herd.get_middle_value(3))
 
-    #     for i in range(int(self.loops) - 1):
-    #         self.start_btn.hide()
-    #         self.listWidget.show()
-    #     if self.check_vis == '✅':
-    #         plt.plot(self.middle_stat)
-    #         plt.show()
-    #     else:
-    #         lst1 = self.create_parents()
-    #         for i in range(len(lst1) - 1):
-    #             self.listWidget.addItem(lst1[i])
-    #         self.listWidget.addItem(f'Средняя сила: {lst1[-1]}')
-    #         self.middle_stat.append(lst1[-1])
+            # Произведение мутации, запись среднего значения в список
+            self.herd.mutation(self.mutation_chanse)
+            self.herd.cleaning()
+            if i + 1 == int(self.loops):
+                show_herd(self.new_animals_lst, self.herd, 1)
+                break
+
+        if self.check_vis == '✅':
+            plt.plot(self.middle_value)
+            plt.show()
 
     def settings(self):
         self.settings_window = SettingsWindow()
@@ -174,13 +159,30 @@ class Interface(QMainWindow):
             self.check_vis = '❌'
 
         self.set_len.setText(str(self.len))
+        self.herd.set_len_ind(self.len)
         self.set_cnt.setText(str(self.cnt))
+        self.herd.set_quantity(self.cnt)
         self.set_check_vis.setText(self.check_vis)
         self.set_loop_cnt.setText(self.loops)
         self.set_mutation.setText(self.mutation_chanse_output + '%')
 
     def initUI(self):
         self.start_btn.clicked.connect(self.start)
+        self.settings_action.triggered.connect(self.settings)
+        self.restart_btn.clicked.connect(restart)
 
-        ##############################################################################
-        self.text_setting_btn.clicked.connect(self.settings)
+    def setupUi(self):
+        ...
+
+
+def execpt_hook(cls, exception, traceback):
+    sys.__excepthook__(cls, exception, traceback)
+
+
+if __name__ == '__main__':
+    sys.excepthook = execpt_hook
+    app = QApplication(sys.argv)
+    app.setWindowIcon((QtGui.QIcon('icon.png.')))
+    ex = Interface()
+    ex.show()
+    sys.exit(app.exec())
