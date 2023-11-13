@@ -493,14 +493,7 @@ template_main_window = """<?xml version="1.0" encoding="UTF-8"?>
     </property>
     <addaction name="settings_action"/>
    </widget>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>Инфо</string>
-    </property>
-    <addaction name="action_5"/>
-   </widget>
    <addaction name="menusettings"/>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="settings_action">

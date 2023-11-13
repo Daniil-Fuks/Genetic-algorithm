@@ -94,11 +94,13 @@ class Interface(QMainWindow):
         self.label_2.hide()
         self.label_3.hide()
         self.restart_btn.hide()
+
         self.myappid = 'icon.png'
         QtWin.setCurrentProcessExplicitAppUserModelID(self.myappid)
 
+
         # С помощью этой функции создается целое стадо
-    def update_progressBar(self, value):                           # <----
+    def update_progressBar(self, value):
         self.progressBar.setValue(value)
 
     def start(self):
@@ -182,7 +184,7 @@ def execpt_hook(cls, exception, traceback):
 if __name__ == '__main__':
     sys.excepthook = execpt_hook
     app = QApplication(sys.argv)
-    app.setWindowIcon((QtGui.QIcon('icon.png.')))
+    app.setWindowIcon(QtGui.QIcon('icon.png'))
     ex = Interface()
     ex.show()
     sys.exit(app.exec())
