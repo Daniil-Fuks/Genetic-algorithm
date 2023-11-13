@@ -9,7 +9,7 @@ class Herd:
         self.individuals = []
         self.iteration_number = 0
         self.last_id = 0
-        self.con = sqlite3.connect('test-db.sqlite3')
+        self.con = sqlite3.connect('../test-db.sqlite3')
         self.cur = self.con.cursor()
         self.first_iteration = True
 

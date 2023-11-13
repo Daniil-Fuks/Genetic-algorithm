@@ -4,7 +4,7 @@ import sys
 from PyQt5 import uic
 from PyQt5.QtWidgets import QDialog, QApplication, QDialogButtonBox, QVBoxLayout, QLabel
 
-from template import template_settings_window
+from src.template import template_settings_window
 
 
 class SettingsWindow(QDialog):

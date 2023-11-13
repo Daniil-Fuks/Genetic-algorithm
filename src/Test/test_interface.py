@@ -9,7 +9,7 @@ from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5 import uic
 from PyQt5.QtWidgets import QMainWindow, QApplication
-from template import template_main_window
+from src.template import template_main_window
 
 from test_classes import Herd
 from test_settings import SettingsWindow
@@ -55,7 +55,7 @@ def mutation(lst, prob):
 
 
 def show_herd(item, herd, num):
-    con = sqlite3.connect('test-db.sqlite3')
+    con = sqlite3.connect('../test-db.sqlite3')
     cur = con.cursor()
     res = cur.execute(f'SELECT * FROM herd WHERE number_herd = {num}').fetchall()
     for i in range(len(res)):
@@ -64,7 +64,7 @@ def show_herd(item, herd, num):
 
 
 def clean_db():
-    con = sqlite3.connect('test-db.sqlite3')
+    con = sqlite3.connect('../test-db.sqlite3')
     cur = con.cursor()
     cur.execute(f'DELETE FROM herd; ').fetchall()
     cur.execute(f'DELETE FROM sqlite_sequence WHERE name="herd"').fetchall()
