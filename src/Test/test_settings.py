@@ -11,8 +11,8 @@ class SettingsWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.initUI()
-        f = io.StringIO(template_settings_window)
-        uic.loadUi(f, self)
+        s = io.StringIO(template_settings_window)
+        uic.loadUi(s, self)
         uic.loadUi('test-settings-window.ui', self)
         self.button_save.clicked.connect(self.save_settings)
 
