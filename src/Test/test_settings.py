@@ -1,7 +1,7 @@
 import sys
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import QDialog, QApplication
+from PyQt5.QtWidgets import QDialog, QApplication, QDialogButtonBox, QVBoxLayout, QLabel
 
 
 class SettingsWindow(QDialog):
@@ -21,6 +21,9 @@ class SettingsWindow(QDialog):
             self.checkbox_vision_res = False
         self.input_len_res = self.set_len_spin.value()
         self.input_cnt_res = self.set_cnt_spin.value()
+        if int(self.input_cnt_res) * int(self.input_len_res) >= 150:
+            error = CustomDialog()
+            error.exec()
         self.input_loop_cnt_res = self.cnt_loop.value()
         self.input_mutation_chanse = self.mutation.value()
         f = open('settings.txt', mode='w', encoding='UTF-8')
@@ -41,3 +44,22 @@ if __name__ == '__main__':
     ex = SettingsWindow()
     ex.show()
     sys.exit(app.exec())
+
+
+class CustomDialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("HELLO!")
+
+        QBtn = QDialogButtonBox.Ok
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+        self.buttonBox.rejected.connect(self.reject)
+
+        self.layout = QVBoxLayout()
+        message = QLabel("Введены неверные значения!")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)

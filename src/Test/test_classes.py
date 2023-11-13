@@ -44,9 +44,9 @@ class Herd:
             self.individuals.append([animal, animal.count('1')])
             self.cur.execute(
                 f"INSERT INTO herd(body, force, number_herd, iteration_number) VALUES ('{animal}', {animal.count('1')}, \
-             1, 1)").fetchall()
+             1, 1)")
             animal = ''
-        self.con.commit()
+            self.con.commit()
 
     def get_middle_value(self, num):
         try:
@@ -69,11 +69,11 @@ class Herd:
                     id2 = random.randint(1, self.quantity)
 
             else:
-                id1 = random.randint(1, self.quantity) + self.last_id - 5
-                id2 = random.randint(1, self.quantity) + self.last_id - 5
+                id1 = random.randint(1, self.quantity) + self.last_id - self.quantity
+                id2 = random.randint(1, self.quantity) + self.last_id - self.quantity
 
                 while id1 == id2:
-                    id2 = random.randint(1, self.quantity) + self.last_id - 5
+                    id2 = random.randint(1, self.quantity) + self.last_id - self.quantity
 
             force1 = self.cur.execute(f'SELECT force FROM herd WHERE id = {id1}').fetchall()[0][0]
             body1 = self.cur.execute(f'SELECT body FROM herd WHERE id = {id1}').fetchall()[0][0]
